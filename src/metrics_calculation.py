@@ -59,7 +59,7 @@ def calculate_metrics(model_pred_df, genre_list, genre_true_counts, genre_tp_cou
     macro_recalls = []
     macro_f1_scores = []
     
-    # Gets macro recision, recall, and f1-scores
+    # Gets macro precision, recall, and f1-scores
     for genre in genre_list:
         macro_tp = genre_tp_counts[genre]
         macro_fp = genre_fp_counts[genre]
@@ -100,6 +100,7 @@ def calculate_sklearn_metrics(model_pred_df, genre_list):
     pred_rows = []
     true_rows = []
     
+    # Iterates over every row in model_pred_df, gets predicted and actual genres
     for index, row in model_pred_df.iterrows():
         predicted_genre = row['predicted']
         actual_genres = ast.literal_eval(row['actual genres'])
@@ -107,6 +108,7 @@ def calculate_sklearn_metrics(model_pred_df, genre_list):
         pred_row = {}
         true_row = {}
         
+        # Binary classification for predicted genre and actual genres 
         for genre in genre_list:
             pred_row[genre] = 1 if genre == predicted_genre else 0
             true_row[genre] = 1 if genre in actual_genres else 0
@@ -117,6 +119,7 @@ def calculate_sklearn_metrics(model_pred_df, genre_list):
     pred_matrix = pd.DataFrame(pred_rows)
     true_matrix = pd.DataFrame(true_rows)
     
+    # Get macro and micro metrics 
     macro_precision, macro_recall, macro_f1, n = precision_recall_fscore_support(true_matrix, pred_matrix, average= 'macro', zero_division= 0.0)
     micro_precision, micro_recall, micro_f1, n = precision_recall_fscore_support(true_matrix, pred_matrix, average= 'micro', zero_division= 0.0)
     
